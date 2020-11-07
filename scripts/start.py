@@ -45,8 +45,8 @@ Note that the root folder MUST be named 'oppia'.
 """)
 
 _PARSER.add_argument(
-    '--save_datastore',
-    help='optional; if specified, does not clear the datastore.',
+    '--clear_datastore',
+    help='optional; if specified, does clear the datastore.',
     action='store_true')
 _PARSER.add_argument(
     '--enable_console',
@@ -116,7 +116,7 @@ def main(args=None):
             % python_utils.UNICODE(PORT_NUMBER_FOR_GAE_SERVER)])
 
     clear_datastore_arg = (
-        '' if parsed_args.save_datastore else '--clear_datastore=true')
+        '--clear_datastore=true' if parsed_args.clear_datastore else '')
     enable_console_arg = (
         '--enable_console=true' if parsed_args.enable_console else '')
     disable_host_checking_arg = (
@@ -139,7 +139,7 @@ def main(args=None):
     # relevant settings in feconf.py. Be careful with this -- you do not want to
     # spam people accidentally.
     background_processes = []
-    if not parsed_args.prod_env:
+    if parsed_args.prod_env:
         # In prod mode webpack is launched through scripts/build.py
         python_utils.PRINT('Compiling webpack...')
         webpack_config_file = (
